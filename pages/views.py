@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from pages.models import Contact
 
 
@@ -28,20 +28,34 @@ def home(request):
 
 
 def contact(request):
+    if request.method == 'GET' and request.GET.get('method') == 'delete' and request.GET.get('id'):
+        rec = Contact.objects.filter(id = request.GET.get('id'))
+        rec.delete()
+
+    if request.method == 'GET' and request.GET.get('method') == 'edit' and request.GET.get('id'):
+        rec = Contact.objects.filter(id = request.GET.get('id')).get()
+        return render(request, 'edit.html', {'page_title': 'Edit Page', 'row': rec})
+
     if request.method == 'POST':
-        # name = request.POST['name']
-        # email = request.POST['email']
-        # address = request.POST['address']
-        # city = request.POST['city']
-        # zipcode = request.POST['zip']
-        data = Contact(
-            name = request.POST['name'],
-            email = request.POST['email'],
-            address = request.POST['address'],
-            city = request.POST['city'],
-            zipcode = request.POST['zipcode'],
-        )
-        data.save()
+        if request.GET.get('method') == 'edit':
+            rec = Contact.objects.filter(id = request.GET.get('id'))
+            rec.update(
+                name = request.POST['name'],
+                email = request.POST['email'],
+                address = request.POST['address'],
+                city = request.POST['city'],
+                zipcode = request.POST['zipcode'],
+            )
+            return HttpResponseRedirect('/contact')
+        else:
+            data = Contact(
+                name = request.POST['name'],
+                email = request.POST['email'],
+                address = request.POST['address'],
+                city = request.POST['city'],
+                zipcode = request.POST['zipcode'],
+            )
+            data.save()
     cnt = Contact.objects.all()
     return render(request, 'contact.html', {'title': 'Contact Page', 'rows': cnt})
 

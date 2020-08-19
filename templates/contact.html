@@ -53,24 +53,31 @@
                                 {#                                <h3>Address: {{ address | default:'No address' }}</h3>#}
                                 {#                                <h3>City: {{ city | default:'No city' }}</h3>#}
                                 {#                                <h3>Zipcode: {{ zipcode | default:'No zipcode' }}</h3>#}
-                                <table class="table table-responsive table-striped">
+                                <table class="table table-dark">
                                     <thead>
                                     <tr>
+                                        <th>Serial</th>
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Address</th>
                                         <th>City</th>
                                         <th>Zipcode</th>
+                                        <th>Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {% for row in rows %}
                                         <tr>
+                                            <td>{{ forloop.counter }}</td>
                                             <td>{{ row.name }}</td>
                                             <td>{{ row.email }}</td>
                                             <td>{{ row.address }}</td>
                                             <td>{{ row.city }}</td>
                                             <td>{{ row.zipcode }}</td>
+                                            <td>
+                                                <a href="/contact?id={{ row.id }}&method=edit" class="btn btn-info btn-sm">Edit</a>
+                                                <a href="/contact?id={{ row.id }}&method=delete" class="btn btn-danger btn-sm">Delete</a>
+                                            </td>
                                         </tr>
                                     {% endfor %}
 
