@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from pages.models import Contact
 
 
 # from django.views import View
@@ -28,13 +29,21 @@ def home(request):
 
 def contact(request):
     if request.method == 'POST':
-        email = request.POST['email']
-        address = request.POST['address']
-        city = request.POST['city']
-        zipcode = request.POST['zip']
-        return render(request, 'contact.html',
-                      {'title': 'Contact Page', 'email': email, 'address': address, 'city': city, 'zipcode': zipcode})
-    return render(request, 'contact.html', {'title': 'Contact Page'})
+        # name = request.POST['name']
+        # email = request.POST['email']
+        # address = request.POST['address']
+        # city = request.POST['city']
+        # zipcode = request.POST['zip']
+        data = Contact(
+            name = request.POST['name'],
+            email = request.POST['email'],
+            address = request.POST['address'],
+            city = request.POST['city'],
+            zipcode = request.POST['zipcode'],
+        )
+        data.save()
+    cnt = Contact.objects.all()
+    return render(request, 'contact.html', {'title': 'Contact Page', 'rows': cnt})
 
 
 def about(request):
